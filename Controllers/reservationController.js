@@ -1,12 +1,34 @@
 const Reservation = require('../Models/modelReservation.js');
+const fetch = require('node-fetch');
 
-// Crear la reserva del hotel
+// aqui hacemos uso del api para traer la info de la persona
+async function getRandomUserData() {
+    try {
+        const response = await fetch('https://randomuser.me/api/');
+        const data = await response.json();
+        const user = data.results[0];
+        return {
+            email: user.email,
+            phone: user.phone,
+            location: {
+                city: user.location.city,
+                country: user.location.country
+            }
+        };
+        // En caso de que falle la información que trae del usuario ramdom
+    } catch (error) {
+        console.error('Error fetching random user data:', error);
+        return null;
+    }
+}
+
+// creamos la reserva que se le hace al hotel
 exports.createReservation = async (req, res) => {
     try {
         const { guestName, roomNumber, checkInDate, checkOutDate } = req.body;
         const hotelId = req.params.hotelId;
 
-        // Aqui vamos a verificar si de pronto ya existe una reserva en la misma fecha para la misma habitacion, aplicamos Conflict y findOne
+        // Realizamos la Verificación de que si ya existe una reservación en la misma fecha para la misma habitación
         const conflict = await Reservation.findOne({
             hotel: hotelId,
             roomNumber,
@@ -20,23 +42,37 @@ exports.createReservation = async (req, res) => {
             return res.status(400).json({ message: "La habitación seleccionada ya está reservada para esa fecha." });
         }
 
-        //Aqui vamos a crear nuestra nueva reservación de hotel
+        // traemos la información que falte del User mediante la Api  
+        const guestInfo = await getRandomUserData();
+
+        // aqui creamos una nueva reservación de hotel
         const reservation = new Reservation({
             guestName,
             roomNumber,
             checkInDate,
             checkOutDate,
-            hotel: hotelId
+            hotel: hotelId,
+            guestInfo: guestInfo // traemos la info que falta del usuario (constante de arriba guestInfo)
         });
 
         await reservation.save();
-        res.status(201).json({ message: "Reservación creada exitosamente", reservation });
+
+        // organizamos todo lo que nos responderá
+        const response = {
+            guestName: reservation.guestName,
+            roomNumber: reservation.roomNumber,
+            checkInDate: reservation.checkInDate,
+            checkOutDate: reservation.checkOutDate,
+            guestInfo: reservation.guestInfo
+        };
+
+        res.status(201).json({ message: "La reservación ha sido creada exitosamente", reservation: response });
     } catch (error) {
         res.status(500).json({ message: "Error creando la reservación", error });
     }
 };
 
-// Vamos a listar las reservas de un hotel
+// Listar las reservaciones que hay en un hotel
 exports.listReservations = async (req, res) => {
     try {
         const reservations = await Reservation.find({ hotel: req.params.hotelId });
@@ -46,7 +82,7 @@ exports.listReservations = async (req, res) => {
     }
 };
 
-// Aqui realizamos la Cancelación de la reserva
+// Cancelación de la reservación
 exports.cancelReservation = async (req, res) => {
     try {
         const { reservationID } = req.body;

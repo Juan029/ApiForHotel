@@ -33,6 +33,14 @@ const reservationSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Hotel',
         required: true
+    },
+    guestInfo: {
+        email: String,
+        phone: String,
+        location: {
+            city: String,
+            country: String
+        }
     }
 });
 

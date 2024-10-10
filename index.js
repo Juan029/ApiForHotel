@@ -1,8 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const config = require('./Config/config.json');
-const hotelRoutes = require('./Routes/hotelRoutes');
-const reservationRoutes = require('./Routes/reservationRoutes');
+const hotelRoutes = require('./Routes/hotelRoutes.js');
+const reservationRoutes = require('./Routes/reservationRoutes.js');
 const { swaggerUi, swaggerSpec } = require('./swagger.js'); 
 
 const app = express();

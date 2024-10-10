@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const config = require('./Config/config.json');
 const hotelRoutes = require('./Routes/hotelRoutes');
 const reservationRoutes = require('./Routes/reservationRoutes');
+const { swaggerUi, swaggerSpec } = require('./swagger.js'); 
 
 const app = express();
 
@@ -12,7 +13,10 @@ mongoose.connect(config.database.mongodb.uri, config.database.mongodb.options)
     .then(() => console.log(config.logs.successMessage))
     .catch(err => console.error(config.logs.errorMessage, err));
 
-// Rutas
+// Ruta Swagger
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+// Rutas de API
 app.use('/api', hotelRoutes);
 app.use('/api', reservationRoutes);
 

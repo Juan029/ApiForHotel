@@ -1,41 +1,41 @@
 const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
-const {infoDB} = require('..//Config/config.json');
-
-const {Schema} = mongoose;
-
-
-const theReservations = new Schema({
+const reservationSchema = new Schema({
     guestName: {
         type: String,
         required: true
     },
-
     roomNumber: {
         type: Number,
-        require: true
+        required: true
     },
-
     checkInDate: {
         type: Date,
-        require: true
+        required: true
     },
-
-    checkOutDate : {
+    checkOutDate: {
         type: Date,
-        require: true
+        required: true,
+        validate: {
+            validator: function (v) {
+                return v > this.checkInDate;
+            },
+            message: 'La fecha del check-out debe ser mayor que la del check-in por favor'
+        }
     },
-
-    Status : {
+    status: {
         type: String,
-        enum: ["Disponible", "No disponible"],
-        require: true
+        enum: ["Confirmada", "Cancelada"],
+        default: "Confirmada"
     },
-
+    hotel: {
+        type: Schema.Types.ObjectId,
+        ref: 'Hotel',
+        required: true
+    }
 });
 
+const Reservation = mongoose.model('Reservation', reservationSchema);
 
-const reservations = infoDB.model('reservations', theReservations);
-
-module.exports = reservations;
-
+module.exports = Reservation;

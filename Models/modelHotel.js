@@ -1,24 +1,17 @@
 const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
-const {infoDB} = require('..//Config/config.json');
-
-const {Schema} = mongoose;
-
-
-const Infohotel = new Schema({
+const hotelSchema = new Schema({
     name: {
         type: String,
         required: true
     },
-
     location: {
         type: String,
-        require: true
+        required: true
     }
 });
 
+const Hotel = mongoose.model('Hotel', hotelSchema);
 
-const hotel = infoDB.model('hotel', Infohotel);
-
-module.exports = hotel;
-
+module.exports = Hotel;

@@ -13,6 +13,9 @@ mongoose.connect(config.database.mongodb.uri, config.database.mongodb.options)
     .then(() => console.log(config.logs.successMessage))
     .catch(err => console.error(config.logs.errorMessage, err));
 
+
+    //MAKE IT WORK, THEN MAKE IT GOOD
+
 // Ruta Swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 

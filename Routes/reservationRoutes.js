@@ -64,4 +64,54 @@ const router = express.Router();
  */
 router.post('/hotels/:hotelId/reservations', reservationController.createReservation);
 
+/**
+ * @swagger
+ * /api/hotels/{hotelId}/reservations:
+ *   get:
+ *     summary: Listar todas las reservas de un hotel
+ *     tags: [Reservas]
+ *     parameters:
+ *       - in: path
+ *         name: hotelId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID del hotel
+ *     responses:
+ *       200:
+ *         description: Lista de reservas
+ *       500:
+ *         description: Error al listar las reservas
+ */
+router.get('/hotels/:hotelId/reservations', reservationController.listReservations);
+
+/**
+ * @swagger
+ * /api/hotels/{hotelId}/reservations/{reservationId}:
+ *   patch:
+ *     summary: Cancelar una reserva
+ *     tags: [Reservas]
+ *     parameters:
+ *       - in: path
+ *         name: hotelId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID del hotel
+ *       - in: path
+ *         name: reservationId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID de la reserva
+ *     responses:
+ *       200:
+ *         description: La reserva fue cancelada exitosamente
+ *       404:
+ *         description: Reserva no encontrada
+ *       500:
+ *         description: Error al cancelar la reserva
+ */
+router.patch('/hotels/:hotelId/reservations/:reservationId', reservationController.cancelReservation);
+
 module.exports = router;

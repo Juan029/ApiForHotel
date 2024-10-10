@@ -1,0 +1,21 @@
+{
+    "database": {
+        "mongodb": {
+            "uri": "mongodb+srv://hotelAdmin:hotel2024@hotelcluster.f49wf.mongodb.net/?retryWrites=true&w=majority&appName=HotelCluster",
+            "options": {
+                "useNewUrlParser": true,
+                "useUnifiedTopology": true
+            }
+        }
+    },
+    "server": {
+        "port": 5002,
+        "host": "localhost"
+    },
+    "logs": {
+        "successMessage": "✅ La conexión a MongoDB fue exitosa",
+        "errorMessage": "❌ Error conectando a MongoDB"
+    }
+}
+
+
